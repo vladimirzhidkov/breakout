@@ -27,7 +27,7 @@ export class Block extends Rectangle {
         this.view = this.ctx.drawBlock(this);
     }
     flipColor() {
-        this.color = (this.color === "blue") ? "red" : "blue";
+        this.color = (this.color ===  this.colors[0]) ? this.colors[1] : this.colors[0];
         this.ctx.redrawBlock(this.view, this);
     }
 }
