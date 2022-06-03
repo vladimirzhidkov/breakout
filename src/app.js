@@ -1,8 +1,8 @@
-import {Vector, Dimensions, Point} from './modules/shapes.js';
+import {Dimensions, Point, Delta} from './modules/shapes.js';
 import {Ball, Block, Playground} from './modules/game_elements.js';
 
 export class Breakout {
-    DELTA_TIME = 20; // time step in milliseconds
+    DELTA_TIME = 10; // time step in milliseconds
     PLAYGROUND_WIDTH = 800;
     PLAYGROUND_HEIGHT = 400;
     PLAYGROUND_COLOR = "yellow";
@@ -13,7 +13,7 @@ export class Breakout {
     WALL_BOTTOM_MARGIN = 0.5; // fraction of playground height
     BLOCK_COLORS = ["blue", "red"];
     BALL_DIRECTION_ANGLE = Math.PI / 4.0; // in radians 
-    BALL_SPEED = 200; // in pixels per second
+    BALL_SPEED = 300; // in pixels per second
     BALL_SIZE_PROPORTION = 0.5 // fraction of block height
     BALL_COLOR = "green"; 
     ctx;
@@ -28,7 +28,7 @@ export class Breakout {
         this.ball = this.constructBall();
     }
     constructPlayground() {
-        var position = new Vector(0, 0);
+        var position = new Point(0, 0);
         var direction = new Dimensions(this.PLAYGROUND_WIDTH, this.PLAYGROUND_HEIGHT);
         var color = this.PLAYGROUND_COLOR;
         return new Playground(position, direction, color, this.ctx);
@@ -75,15 +75,16 @@ d    }
         var ballDimensions = new Dimensions(ballSize, ballSize);
         var x = (this.PLAYGROUND_WIDTH - ballSize) / 2;
         var y = 0;
-        var ballPosition = new Vector(x, y);
+        var ballPosition = new Point(x, y);
         var ballDeltaPosition = this.calculateBallDeltaPosition()
         return new Ball(ballPosition, ballDimensions, this.BALL_COLOR, this.ctx, ballDeltaPosition); 
     }
     calculateBallDeltaPosition() {
-        var velocityUnitVector = 
-            new Vector(Math.cos(this.BALL_DIRECTION_ANGLE), Math.sin(this.BALL_DIRECTION_ANGLE));
         var delta = this.BALL_SPEED * this.DELTA_TIME / 1000.0; 
-        var deltaPosition = velocityUnitVector.multiplyByScalar(delta);
+        var deltaPosition = new Delta(
+            Math.cos(this.BALL_DIRECTION_ANGLE) * delta,
+            Math.sin(this.BALL_DIRECTION_ANGLE) * delta
+        ); 
         return deltaPosition;
     }
     checkForBallCollisionWithPlaygroundBorders() {

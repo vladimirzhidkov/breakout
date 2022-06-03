@@ -2,35 +2,37 @@ export class Point {
     x = 0;
     y = 0;
     constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        this.x = Math.round(x);
+        this.y = Math.round(y);
     } 
-}
-export class Vector extends Point {
-    constructor(x, y) {
-        super(x, y);
-    }
-    add(vector) {
-        var x = this.x + vector.x;
-        var y = this.y + vector.y;
-        return new Vector(x, y);
-    }
-    multiplyByScalar(scalar) {
-        var x = this.x * scalar;
-        var y = this.y * scalar;
-        return new Vector(x, y);
+    add(delta) {
+        return new Point(this.x + delta.deltaX, this.y + delta.deltaY);
     }
 }
-export class Dimensions {
-    width;
-    height;
+export class Delta extends Point {
+    constructor(deltaX, deltaY) {
+        super(deltaX, deltaY);
+    }
+    get deltaX() {
+        return this.x;
+    }
+    get deltaY() {
+        return this.y;
+    }
+}
+export class Dimensions extends Point {
     constructor(width, height) {
-        this.width = width;
-        this.height = height;
+        super(width, height);
+    }
+    get width() {
+        return this.x;
+    }
+    get height() {
+        return this.y;
     }
 }
 export class Shape {
-    position; // position vector
+    position; 
     dimensions;
     color;
     ctx;
@@ -45,39 +47,39 @@ export class Shape {
     }
     get bottomRight() {
         var x = this.position.x + this.dimensions.width;
-        return new Vector(x, this.position.y);
+        return new Point(x, this.position.y);
     }
     get topLeft() {
         var y = this.position.y + this.dimensions.height;
-        return new Vector(this.position.x, y);
+        return new Point(this.position.x, y);
     }
     get topRight() {
         var x = this.position.x + this.dimensions.width;
         var y = this.position.y + this.dimensions.height;
-        return new Vector(x, y);
+        return new Point(x, y);
     }
     get center() {
         var x = this.position.x + this.dimensions.width / 2;
         var y = this.position.y + this.dimensions.height / 2;
-        return new Vector(x, y);
+        return new Point(x, y);
     }
     get top() {
         var x = this.position.x + this.dimensions.width / 2;
         var y = this.position.y + this.dimensions.height;
-        return new Vector(x, y);
+        return new Point(x, y);
     }
     get bottom() {
         var x = this.position.x + this.dimensions.width / 2;
-        return new Vector(x, this.position.y);
+        return new Point(x, this.position.y);
     }
     get left() {
         var y = this.position.y + this.dimensions.height / 2;
-        return new Vector(this.position.x, y);
+        return new Point(this.position.x, y);
     }
     get right() {
         var x = this.position.x + this.dimensions.width;
         var y = this.position.y + this.dimensions.height / 2;
-        return new Vector(x, y);
+        return new Point(x, y);
     }
 }
 export class Line {
@@ -86,6 +88,12 @@ export class Line {
     constructor(point1, point2) {
         this.point1 = point1;
         this.point2 = point2;
+    }
+    // Given three collinear points p, q, r, the function checks if
+    // point q lies on line segment 'pr'
+    onSegment(p, q, r) {
+        return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) &&
+            q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);
     }
 }
 export class Rectangle extends Shape {
