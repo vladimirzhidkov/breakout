@@ -95,13 +95,13 @@ d    }
         }
     }
     isBallToHitPlaygroundTopOrBottomEdge() {
-        var isToHitTopBorder = this.playground.isPointToGetOut(this.ball.top, this.ball.deltaPosition);
-        var isToHitBottomBorder = this.playground.isPointToGetOut(this.ball.bottom, this.ball.deltaPosition);
+        var isToHitTopBorder = this.playground.isPointToGetOutsideIn(this.ball.top, this.ball.deltaPosition);
+        var isToHitBottomBorder = this.playground.isPointToGetOutsideIn(this.ball.bottom, this.ball.deltaPosition);
         return isToHitTopBorder || isToHitBottomBorder;
     }
     isBallToHitPlaygroundLeftOrRightEdge() {
-        var isToHitLeftBorder = this.playground.isPointToGetOut(this.ball.left, this.ball.deltaPosition);
-        var isToHitRightBorder = this.playground.isPointToGetOut(this.ball.right, this.ball.deltaPosition);
+        var isToHitLeftBorder = this.playground.isPointToGetOutsideIn(this.ball.left, this.ball.deltaPosition);
+        var isToHitRightBorder = this.playground.isPointToGetOutsideIn(this.ball.right, this.ball.deltaPosition);
         return isToHitLeftBorder || isToHitRightBorder;
     }
     checkForBallCollisionWithBlocks() {
@@ -117,13 +117,13 @@ d    }
         }); 
     }
     isBallToHitBlockBottomOrTopEdge(block) {
-        var isToHitBottom = block.isPointToGetIn(this.ball.top, this.ball.deltaPosition);
-        var isToHitTop = block.isPointToGetIn(this.ball.bottom, this.ball.deltaPosition); 
+        var isToHitBottom = block.isPointToGetInsideOut(this.ball.top, this.ball.deltaPosition);
+        var isToHitTop = block.isPointToGetInsideOut(this.ball.bottom, this.ball.deltaPosition); 
         return isToHitBottom || isToHitTop;
     }
     isBallToHitBlockLeftOrRightEdge(block) {
-        var isToHitLeft = block.isPointToGetIn(this.ball.right, this.ball.deltaPosition); 
-        var isToHitRight = block.isPointToGetIn(this.ball.left, this.ball.deltaPosition); 
+        var isToHitLeft = block.isPointToGetInsideOut(this.ball.right, this.ball.deltaPosition); 
+        var isToHitRight = block.isPointToGetInsideOut(this.ball.left, this.ball.deltaPosition); 
         return isToHitLeft || isToHitRight;
     }
     renderNextState() {

@@ -82,48 +82,24 @@ export class Shape {
         return new Point(x, y);
     }
 }
-export class Line {
-    point1;
-    point2;
-    constructor(point1, point2) {
-        this.point1 = point1;
-        this.point2 = point2;
-    }
-    // Given three collinear points p, q, r, the function checks if
-    // point q lies on line segment 'pr'
-    onSegment(p, q, r) {
-        return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) &&
-            q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);
-    }
-}
 export class Rectangle extends Shape {
     constructor(position, dimensions, color, ctx) {
         super(position, dimensions, color, ctx);
     }
-    get bottomEdge() {
-        return new Line(this.bottomLeft, this.bottomRight);
-    }
-    get topEdge() {
-        return new Line(this.topLeft, this.topRight);
-    }
-    get leftEdge() {
-        return new Line(this.bottomLeft, this.topLeft);
-    }
-    get rightEdge() {
-        return new Line(this.bottomRight, this.topRight);
-    }
     isPointInside(point) {
-        var isPointInsideXBorders = point.x >= this.position.x && point.x <= this.position.x + this.dimensions.width;
-        var isPointInsideYBorders = point.y >= this.position.y && point.y <= this.position.y + this.dimensions.height; 
+        var isPointInsideXBorders =
+            point.x >= this.position.x && point.x <= this.position.x + this.dimensions.width;
+        var isPointInsideYBorders =
+            point.y >= this.position.y && point.y <= this.position.y + this.dimensions.height; 
         return isPointInsideXBorders && isPointInsideYBorders; 
     }
     isPointOutside(point) {
         return !this.isPointInside(point); 
     }
-    isPointToGetIn(point, delta) {
+    isPointToGetInsideOut(point, delta) {
         return this.isPointOutside(point) && this.isPointInside(point.add(delta));
     }
-    isPointToGetOut(point, delta) {
+    isPointToGetOutsideIn(point, delta) {
         return this.isPointInside(point) && this.isPointOutside(point.add(delta));
     }
 }
