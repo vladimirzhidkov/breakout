@@ -1,5 +1,5 @@
-import {Dimensions, Point, Delta} from './modules/shapes.js';
-import {Ball, Block, Playground} from './modules/game_elements.js';
+import {Dimensions, Point, Delta, Border, Rectangle} from './modules/shapes.js';
+import {Ball, Block} from './modules/game_elements.js';
 
 export class Breakout {
     DELTA_TIME = 10; // time step in milliseconds
@@ -23,26 +23,32 @@ export class Breakout {
     ball;
     constructor(ctx) {
         this.ctx = ctx; 
-        this.playground = this.constructPlayground();
-        this.blocks = this.constructBlocks(); 
-        this.ball = this.constructBall();
+        this.playground = this.constructPlayground(this.ctx);
+        this.blocks = this.constructBlocks(this.ctx, this.playground); 
+        this.ball = this.constructBall(this.ctx, this.playground);
     }
-    constructPlayground() {
+    constructPlayground(ctx) {
         var position = new Point(0, 0);
-        var direction = new Dimensions(this.PLAYGROUND_WIDTH, this.PLAYGROUND_HEIGHT);
+        var dimensions = new Dimensions(this.PLAYGROUND_WIDTH, this.PLAYGROUND_HEIGHT);
         var color = this.PLAYGROUND_COLOR;
-        return new Playground(position, direction, color, this.ctx);
+        var border = new Border();
+        return new Rectangle(position, dimensions, color, border, ctx);
     }
-    constructBlocks() {
+    constructBlocks(ctx, playground) {
         var blocks = []; 
         var wallPosition = this.calculateWallPosition();
         var wallDimensions = this.calculateWallDimensions(); 
         var blockDimensions = this.calculateBlockDimensions(wallDimensions); 
+        var border = new Border();
+        border.color = playground.color;
+        border.style = "solid";
+        border.width = 2;
+        border.radius = blockDimensions.height / 4;
         for(let wallRowIndex = 0; wallRowIndex < this.WALL_ROW_COUNT; wallRowIndex++) {
             for(let blockIndex = 0; blockIndex < this.WALL_ROW_BLOCK_COUNT; blockIndex++) {
                 var blockPosition = 
                     this.calculateBlockPosition(wallPosition, wallRowIndex, blockDimensions, blockIndex); 
-                var block = new Block(blockPosition, blockDimensions, this.BLOCK_COLORS, this.ctx);
+                var block = new Block(blockPosition, blockDimensions, this.BLOCK_COLORS, border, ctx, playground.view);
                 blocks.push(block);
             }
         }
@@ -68,7 +74,7 @@ d    }
         var y = wallPosition.y + blockDimensions.height * wallRowIndex;
         return new Point(x, y);
     }
-    constructBall() {
+    constructBall(ctx, playground) {
         var wallDimensions = this.calculateWallDimensions(); 
         var blockDimensions = this.calculateBlockDimensions(wallDimensions);
         var ballSize = blockDimensions.height * this.BALL_SIZE_PROPORTION;
@@ -76,8 +82,8 @@ d    }
         var x = (this.PLAYGROUND_WIDTH - ballSize) / 2;
         var y = 0;
         var ballPosition = new Point(x, y);
-        var ballDeltaPosition = this.calculateBallDeltaPosition()
-        return new Ball(ballPosition, ballDimensions, this.BALL_COLOR, this.ctx, ballDeltaPosition); 
+        var ballDeltaPosition = this.calculateBallDeltaPosition();
+        return new Ball(ballPosition, ballDimensions, this.BALL_COLOR, ballDeltaPosition, ctx, playground.view); 
     }
     calculateBallDeltaPosition() {
         var delta = this.BALL_SPEED * this.DELTA_TIME / 1000.0; 

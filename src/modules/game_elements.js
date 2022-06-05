@@ -1,15 +1,16 @@
-import {Delta, Shape, Rectangle} from './shapes.js';
+import {Delta, Shape, Rectangle, Border} from './shapes.js';
 
 export class Ball extends Shape {
     deltaPosition; 
-    constructor(position, dimensions, color, ctx, deltaPosition) {
-        super(position, dimensions, color, ctx);
+    constructor(position, dimensions, color, deltaPosition, ctx, parentView) {
+        var border = new Border()
+        border.radius = dimensions.width;
+        super(position, dimensions, color, border, ctx, parentView);
         this.deltaPosition = deltaPosition;
-        this.ctx && this.ctx.drawBall(this);
     }
     move() {
         this.position = this.position.add(this.deltaPosition);
-        this.ctx.redrawBall(this.position);
+        this.ctx.updatePosition(this.view, this);
     }
     flipXDirection() {
         this.deltaPosition = new Delta(-1 * this.deltaPosition.deltaX, this.deltaPosition.deltaY);
@@ -20,20 +21,12 @@ export class Ball extends Shape {
 }
 export class Block extends Rectangle {
     colors;
-    view;
-    constructor(position, dimensions, colors, ctx) {
-        super(position, dimensions, colors[0], ctx);
+    constructor(position, dimensions, colors, border, ctx, parentView) {
+        super(position, dimensions, colors[0], border, ctx, parentView);
         this.colors = colors;
-        this.view = this.ctx.drawBlock(this);
     }
     flipColor() {
         this.color = (this.color ===  this.colors[0]) ? this.colors[1] : this.colors[0];
-        this.ctx.redrawBlock(this.view, this);
-    }
-}
-export class Playground extends Rectangle {
-    constructor(position, dimensions, color, ctx) {
-        super(position, dimensions, color, ctx);
-        this.ctx.drawPlayground(this);
+        this.ctx.updateColor(this.view, this);
     }
 }

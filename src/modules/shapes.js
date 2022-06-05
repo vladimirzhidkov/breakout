@@ -31,16 +31,32 @@ export class Dimensions extends Point {
         return this.y;
     }
 }
+export class Border {
+    width;
+    style;
+    color; 
+    radius;
+    constructor(width, style, color, radius) {
+        this.width = width || 0;
+        this.style = style;
+        this.color = color;
+        this.radius = radius;
+    }
+}
 export class Shape {
     position; 
     dimensions;
     color;
+    border;
     ctx;
-    constructor(position, dimensions, color, ctx) {
+    view;
+    constructor(position, dimensions, color, border, ctx, parentView) {
         this.position = position;
         this.dimensions = dimensions;
         this.color = color;
+        this.border = border;
         this.ctx = ctx;
+        this.view = this.ctx.createElement(this, parentView);
     }
     get bottomLeft() {
         return this.position;
@@ -83,8 +99,8 @@ export class Shape {
     }
 }
 export class Rectangle extends Shape {
-    constructor(position, dimensions, color, ctx) {
-        super(position, dimensions, color, ctx);
+    constructor(position, dimensions, color, border, ctx, parentView) {
+        super(position, dimensions, color, border, ctx, parentView);
     }
     isPointInside(point) {
         var isPointInsideXBorders =
