@@ -96,7 +96,8 @@ d    }
     checkForBallCollisionWithPlaygroundBorders() {
         if (this.isBallToHitPlaygroundTopOrBottomEdge()) {
             this.ball.flipYDirection();
-        } else if (this.isBallToHitPlaygroundLeftOrRightEdge()) {
+        }
+        if (this.isBallToHitPlaygroundLeftOrRightEdge()) {
             this.ball.flipXDirection();
         }
     }
